@@ -1,0 +1,21 @@
+clc;
+clear;
+%syms x1 y1; %setting up variables that are being worked with
+%f1=x1+y1;%differential equation being used
+x0=0;%initial values
+y0=0;%initial values
+h=.01; %stepsize
+for i=0:h:1
+    Fun=double(subs(f1,{x1,y1},{x0,y0}));%double changes output from symbolic to non symbolic value
+    xnew=x0+h;
+    ynew=y0+Fun*(h);
+    y0=ynew;
+    x0=xnew;
+    if rem(i,.1)==0
+    fprintf('%f\t\t%f\n',xnew,ynew);%prints data nicely 
+   end
+    
+end
+
+
+
