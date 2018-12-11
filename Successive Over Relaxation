@@ -1,0 +1,29 @@
+clc;
+clear;
+A=zeros(101,1);%Creating an n+1 x 1 matrix filled with zeroes for unspecified values in first iteration
+Pe=150;%Peclet number, given
+Da=8;%Damkohler Number, given
+h=.01;%step size 
+%C1=(2+h*Pe);%expression tied to C(i-1) values
+%C2=(-4-Da*Pe*h^2);%expression tied to C(i) values
+%C3=(2-h*Pe);%expression tied to C(i+1) values
+C1=1/(Pe*h^2)+(1/(2*h));
+C2=-2/(Pe*h^2)-Da;
+C3=1/(Pe*h^2)-(1/(2*h))
+SRF=1.1;%successive relaxation factor 
+%ROW X COLUMN 
+A(1,1)=.5;% setting initial values in matrix
+
+
+for a=0:1000 %iterations, which should converge faster based on SRF
+    for i=2:100
+
+        C=((-A(i+1,1)*(C3)-(A(i-1)*C1))/C2);%this is the expression for C(i) 
+        A(i,1)=A(i,1)+(SRF)*(C-A(i,1));%adjusted value of C(i) using SRF
+    end
+end
+
+
+
+disp(A)
+
