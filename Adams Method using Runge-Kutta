@@ -1,0 +1,58 @@
+clear;
+clc;
+x10=1.001;
+x20=1.001;
+h=1;
+A=zeros(1000,6);%1=x1 values
+%2=x2 values
+%3=funct1 values
+%4=funct2 values
+%5 and 6 are predictor values 
+
+
+%using Runge-Kutta 4th order to initialize, getting x-values to be used in
+%the predictor step
+for i=1:3
+    A(i,1)=x10;
+    A(i,2)=x20;
+    A(i,3)=funct1(x10,x20);
+    A(i,4)=funct2(x10,x20);
+   
+k11=h*funct1(x10,x20);
+k12=h*funct2(x10,x20);
+   
+    
+    k21=h*funct1(x10+(k11/2),x20+(k12/2));
+    k22=h*funct2(x10+(k11/2),x20+(k12/2));
+   
+    
+    k31=h*funct1(x10+(k21/2),x20+(k22/2));
+    k32=h*funct2(x10+(k21/2),x20+(k22/2));
+    
+   
+    k41=h*funct1(x10+k31,x20+k32);
+    k42=h*funct2(x10+k31,x20+k32);
+
+%t0=t0+h
+x1new=x10+(1/6)*(k11+2*k21+2*k31+k41);
+x2new=x20+(1/6)*(k12+2*k22+2*k32+k42);
+x10=x1new;
+x20=x2new;
+%fprintf('%f\t\t\t%f\n',x1new,x2new);%prints data nicely 
+
+end
+%startding Open Adams 3rd order X*3=x2+h/12(23f(i)-16f(i-1)+5f(i-2)
+%and x3=x2+h/12(5f(xstar)+8f(i)-f(i-1)
+for j=4:2000
+    
+x1star=A(j-1,1)+(h/12)*(23*A(j-1,3)-16*A(j-2,3)+5*A(j-3,3));
+x2star=A(j-1,2)+(h/12)*(23*A(j-1,4)-16*A(j-2,4)+5*A(j-3,4));
+    A(j,5)=funct1(x1star,x2star);
+    A(j,6)=funct2(x1star,x2star);
+x1actual=A(j-1,1)+(h/12)*(5*(A(j,5)+8*A(j-1,3)-A(j-2,3)));
+x2actual=A(j-1,2)+(h/12)*(5*(A(j,6)+8*A(j-1,4)-A(j-2,4)));
+    A(j,1)=x1actual;
+    A(j,2)=x2actual;
+end
+
+disp(A)
