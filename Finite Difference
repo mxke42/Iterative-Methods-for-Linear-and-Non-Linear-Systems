@@ -1,0 +1,65 @@
+clc;
+clear;
+
+
+%ROW X COLUMN
+
+%A=zeros(102);% creating a square matrix 100x100 with all elements equal to zero
+%B=zeros(102,1); %creating answer matrix 100 x1 with top element as the initial condition
+A=zeros(101);
+B=zeros(101,1);
+h=.01;%also known as delta x
+Pe=150;
+Da=8;
+C1=1/(Pe*h^2)+(1/(2*h));
+C2=-2/(Pe*h^2)-Da;
+C3=1/(Pe*h^2)-(1/(2*h));
+%C1=(2+h*Pe);
+%C2=(-2-2*Da*(h^2)*Pe);
+%C3=(2-h*Pe);
+C0=.5;
+
+A(1,1)=1;% setting up boundary conditions for BC#1
+%A(1,1)=C2;
+%A(1,2)=C3;
+%A(1,3)=-1;
+%A(2,1)=C2;
+%A(2,2)=C3;
+%A(1,1)=1;
+
+B(1,1)=.5;
+%B(1,1)=-.5*(C1);
+%B(2,1)=-C0*(2+Pe*h);
+
+for i=1:99
+    A(i+1,i)=C1;
+    %for i=1:98
+    A(i+1,i+1)=C2;
+    %end
+    %for i=1:98
+    A(i+1,i+2)=C3;
+   % end
+    
+end
+%A(102,100)=-1;
+A(101,101)=1;
+%A(10,9)=C2;
+%A(10,8)=C1;
+%A(101,101)=1;
+disp(A);
+
+
+x=linsolve(A,B)% solving the matrix for c values
+
+%A=[7 5 -2;-2 3 1;7 -1 8];
+%b=[7;3;1];
+%%[L,U]=lu(A);
+%Z=[z1;z2;z3];
+%%z=L\B;%solves the system [L][Z]=[b] for z 
+%%z=mldivide(L,B);
+
+%%x=U\z;
+%%x=mldivide(U,z)
+
+
+
