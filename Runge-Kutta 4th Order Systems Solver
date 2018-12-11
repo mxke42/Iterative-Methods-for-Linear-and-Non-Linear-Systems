@@ -1,0 +1,62 @@
+clc;
+clear;
+syms x1 y1 y2 y3;
+%f1=-.013*y1-10000*y1*y3; %dy1/dt
+%f2=-2500*y2*y3; %dy2/dt
+%f3=-.013*y1-1000*y1*y3-2500*y2*y3;%dy3/dt
+x0=0;%time initial equals zero
+y10=1;%at t=0 y1=1   y1(0)=1
+y20=1;%at t=0 y2=1   y2(0)=1
+y30=0;%at t=0 y3=0   y3(0)=0
+h=.00002;%stepsize
+
+%solving the first equation with y10 using step size h
+for i=1:h:51
+    
+    
+    k11new=h*funct1(y10,y30);
+    
+    k12new=h*funct2(y20,y30);
+    
+    k13new=h*funct3(y10,y20,y30);
+    
+   
+    
+    k21new=h*funct1(y10+(k11new/2),y30+(k13new/2));
+
+    k22new=h*funct2(y20+(k12new/2),y30+(k13new/2));
+
+    k23new=h*funct3(y10+(k11new/2),y20+(k12new/2),y30+(k13new/2));
+    
+    %k31new=h*double((subs(f1,{y1,y3},{y10+(k21new/2),y30+(k23new/2)})));
+    k31new=h*funct1(y10+(k21new/2),y30+(k23new/2));
+    %k32new=h*double((subs(f2,{y2,y3},{y20+(k22new/2),y30+(k23new/2)})));
+    k32new=h*funct2(y20+(k22new/2),y30+(k23new/2));
+    %k33new=h*double((subs(f3,{y1,y2,y3},{y10+(k21new/2),y20+(k22new/2),y30+(k23new/2)})));
+   k33new=h*funct3(y10+(k21new/2),y20+(k22new/2),y30+(k23new/2));
+   
+    %k41new=h*double((subs(f1,{y1,y3},{y10+k31new,y30+k33new})));
+    k41new=h*funct1(y10+k31new,y30+k33new);
+    %k42new=h*double((subs(f2,{y2,y3},{y20+k32new,y30+k33new})));
+    k42new=h*funct2(y20+k32new,y30+k33new);
+    %k43new=h*double((subs(f3,{y1,y2,y3},{y10+k31new,y20+k32new,y30+k33new})));
+    k43new=h*funct3(y10+k31new,y20+k32new,y30+k33new);
+    
+y1new=y10+(1/6)*(k11new+2*k21new+2*k31new+k41new);
+   
+y2new=y20+(1/6)*(k12new+2*k22new+2*k32new+k42new);
+   
+y3new=y30+(1/6)*(k13new+2*k23new+2*k33new+k43new);
+y10=y1new;
+y20=y2new;
+y30=y3new;
+xnew=x0+h;
+x0=xnew;
+if rem(i,1)==0
+fprintf('%f\t\t%f\t\t%f\t\t%f\n',xnew,y1new,y2new,y3new)
+end
+
+%prints data nicely 
+end
+%fprintf('%f\t%f\t%f\t%f\n',xnew,y1new,y2new,y3new);%prints data nicely 
+
